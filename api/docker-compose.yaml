@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:latest
+    command: "--default-authentication-plugin=mysql_native_password"
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backnet
+    environment:
+      - MYSQL_DATABASE=example
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+  app:
+    build: app
+    restart: always
+    secrets:
+      - db-password
+    ports:
+      - 5000:5000
+    networks:
+      - backnet
+volumes:
+  db-data:
+secrets:
+  db-password:
+    file: db/password.txt
+networks:
+  backnet:
