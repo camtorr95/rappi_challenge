@@ -58,6 +58,7 @@ def orders_predict():
 
 
 @app.route("/orders", methods=["GET"])
+@app.route("/orders/", methods=["GET"])
 @app.route("/orders/<order_id>", methods=["GET"])
 def orders(order_id=None):
     # logic for both all orders, and order by id
