@@ -33,10 +33,11 @@ The **api** folder contains a docker-compose.yaml file, a pre-trained model, pyt
 cd api
 ```
 
-Once we're in the **api** folder we can see there's a docker-compose.yaml file. We can now start the app and it's containers with the following command.
+Once we're in the **api** folder we can see there's a docker-compose.yaml file. We can now start the app and it's containers with one of the following command. The second one is recommended for testing and dev purposes.
 
 ```bash
 docker-compose up -d
+docker-compose up --build
 ```
 
 Now you can make requests to the api locally.
