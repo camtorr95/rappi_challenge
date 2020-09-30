@@ -49,6 +49,8 @@ Can access this same readme here.
 http://localhost:5000/
 ```
 
+These are the supported HTTP requests.
+
 ```url
 GET http://localhost:5000/orders
 ```
