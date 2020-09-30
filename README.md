@@ -44,6 +44,11 @@ Now you can make requests to the api locally.
 
 ## REST Api
 
+Can access this same readme here.
+```url
+http://localhost:5000/
+```
+
 ```url
 GET http://localhost:5000/orders
 ```
