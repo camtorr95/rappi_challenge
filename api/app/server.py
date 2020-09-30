@@ -11,6 +11,11 @@ def handle_bad_request(m):
     return {"error": f"bad request: {m}"}, 400
 
 
+@app.route("/", methods=["GET"])
+def index():
+    return app.send_static_file('index.html')
+
+
 @app.route("/orders/predict", methods=["POST"])
 def orders_predict():
     body = request.get_json(force=False)

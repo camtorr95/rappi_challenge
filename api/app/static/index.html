@@ -1,0 +1,143 @@
+<h1 id="rappi-challenge">Rappi Challenge</h1>
+<p>Given the specifications, this repository contains a docker proyect, in which the developed API is exposed. Additionally, there&#39;s a notebook with details on the training of the model.</p>
+<h2 id="installation">Installation</h2>
+<h4 id="this-proyect-runs-on-docker">This proyect runs on docker</h4>
+<p>First download the proyect</p>
+<pre><code class="lang-bash">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/camtorr95/rappi_challenge
+</code></pre>
+<p>You&#39;ll notice there are 2 main folders: <strong>api</strong> and <strong>notebook</strong>.</p>
+<h3 id="notebook">Notebook</h3>
+<p>On the <strong>notebook</strong> folder there&#39;s a filed called</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> notebook
+rappi_challenge.ipynb
+</code></pre>
+<p>This is a python notebook with all the details associated to the training of the model, which are then saved as a pickle file.</p>
+<h3 id="api">Api</h3>
+<p>The <strong>api</strong> folder contains a docker-compose.yaml file, a pre-trained model, python source files for the specified API and some docker configuration files.</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> api
+</code></pre>
+<p>Once we&#39;re in the <strong>api</strong> folder we can see there&#39;s a docker-compose.yaml file. We can now start the app and it&#39;s containers with the following command.</p>
+<pre><code class="lang-bash">docker-compose up <span class="hljs-_">-d</span>
+</code></pre>
+<p>Now you can make requests to the api locally.</p>
+<h2 id="rest-api">REST Api</h2>
+<pre><code class="lang-url">GET <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:5000/orders</span>
+</code></pre>
+<p>This will return all orders that have been predicted by this Api. The json output structure looks like this.</p>
+<pre><code class="lang-json">{
+    <span class="hljs-attr">"orders"</span>: [
+        {
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"Thu, 07 Sep 2017 20:02:17 GMT"</span>,
+            <span class="hljs-attr">"last_predicted_at"</span>: <span class="hljs-string">"Wed, 30 Sep 2020 06:30:19 GMT"</span>,
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364873</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-string">"30000009"</span>,
+            <span class="hljs-attr">"taken"</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200</span>
+        }
+    ],
+    <span class="hljs-attr">"taken_rate"</span>: {
+        <span class="hljs-attr">"0"</span>: <span class="hljs-number">1.0</span>,
+        <span class="hljs-attr">"1"</span>: <span class="hljs-number">0.0</span>
+    },
+    <span class="hljs-attr">"total_orders"</span>: <span class="hljs-number">1</span>
+}
+</code></pre>
+<pre><code class="lang-url">GET http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">5000</span><span class="hljs-regexp">/orders/</span>&lt;order_id&gt;
+</code></pre>
+<p>This will return the order matching <order_id> if it has already been processed, or an error message of not found. This is what the output looks like.</p>
+<pre><code class="lang-json">{
+    <span class="hljs-attr">"order"</span>: {
+        <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"Thu, 07 Sep 2017 20:02:17 GMT"</span>,
+        <span class="hljs-attr">"last_predicted_at"</span>: <span class="hljs-string">"Wed, 30 Sep 2020 06:30:19 GMT"</span>,
+        <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364873</span>,
+        <span class="hljs-attr">"store_id"</span>: <span class="hljs-number">30000009</span>,
+        <span class="hljs-attr">"taken"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+        <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+        <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200.0</span>
+    }
+}
+</code></pre>
+<pre><code class="lang-url">POST http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">5000</span><span class="hljs-regexp">/orders/</span>predict
+</code></pre>
+<p>This will recieve either a single order with the following structure</p>
+<pre><code class="lang-json">{
+    <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"2017-09-07T20:07:23Z"</span>,
+    <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364879</span>,
+    <span class="hljs-attr">"store_id"</span>: <span class="hljs-number">30000009</span>,
+    <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+    <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+    <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200.0</span>
+}
+</code></pre>
+<p>Or a list of orders like this.</p>
+<pre><code class="lang-json">{
+    <span class="hljs-attr">"orders"</span>: [
+        {
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364873</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-number">30000009</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200</span>,
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"2017-09-07T20:02:17Z"</span>
+        },
+        {
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364874</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-number">30000009</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200</span>,
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"2017-09-07T20:02:17Z"</span>,
+        },
+        {
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14368573</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-number">900013508</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">0.5629625762571852</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-21.301147460937955</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">5200</span>,
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"2017-09-07T20:17:17Z"</span>
+        }
+    ]
+}
+</code></pre>
+<p>Notice that <em>created_at</em> is formatted in a specific way <strong>YYYY-MM-DD&#39;T&#39;HH:MM:SS&#39;Z&#39;</strong>.</p>
+<p>Doesn&#39;t matter how you send the request, the output will always look like this.</p>
+<pre><code class="lang-json">{
+    <span class="hljs-attr">"predictions"</span>: [
+        {
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"Thu, 07 Sep 2017 20:02:17 GMT"</span>,
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364873</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-string">"30000009"</span>,
+            <span class="hljs-attr">"taken"</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200</span>
+        },
+        {
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"Thu, 07 Sep 2017 20:02:17 GMT"</span>,
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14364874</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-string">"30000009"</span>,
+            <span class="hljs-attr">"taken"</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">2.4781006757058885</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-72.71936035156295</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">4200</span>
+        },
+        {
+            <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"Thu, 07 Sep 2017 20:17:17 GMT"</span>,
+            <span class="hljs-attr">"order_id"</span>: <span class="hljs-number">14368573</span>,
+            <span class="hljs-attr">"store_id"</span>: <span class="hljs-string">"900013508"</span>,
+            <span class="hljs-attr">"taken"</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"to_user_distance"</span>: <span class="hljs-number">0.5629625762571852</span>,
+            <span class="hljs-attr">"to_user_elevation"</span>: <span class="hljs-number">-21.301147460937955</span>,
+            <span class="hljs-attr">"total_earning"</span>: <span class="hljs-number">5200</span>
+        }
+    ],
+    <span class="hljs-attr">"taken_rate"</span>: {
+        <span class="hljs-attr">"0"</span>: <span class="hljs-number">0.6666666666666667</span>,
+        <span class="hljs-attr">"1"</span>: <span class="hljs-number">0.3333333333333333</span>
+    },
+    <span class="hljs-attr">"total_predictions"</span>: <span class="hljs-number">3</span>
+}
+</code></pre>
